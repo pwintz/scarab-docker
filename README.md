@@ -1,7 +1,6 @@
-Getting Started
+# Getting Started
 
-1. Install Docker.
-1. Copy pins from [here](https://drive.google.com/drive/folders/1KqUUOHzuKc8Hsw-vj3lZ_9UK2qJyWcM1?usp=share_link) into `./pins/`
-1. Run `sudo service docker start`.
-1. Run `docker build -t test:latest .` to generate the Docker container. This step includes installing dependencies and compiling the Scarab source code, so it takes a few minutes.
-1. Run `docker run -it test:latest` to run the container in interactive mode. 
+1. Install [Docker](https://docs.docker.com/engine/install/).
+1. Run `./setup` to download the Pin files and clone the Scarab repository. This script installs gdown (via `pip`) to enable downloading from Google Drive.  
+1. Run `./build` to generate the Docker container. This step includes installing dependencies and compiling the Scarab source code, so it takes a few minutes.
+1. Run `./run` to run the Docker container in interactive mode. 

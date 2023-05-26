@@ -1,0 +1,20 @@
+drrun \
+	-root $DYNAMORIO_ROOT \
+	-t drcachesim \
+	-offline \
+	-outdir traces \
+	-- \
+	ls
+
+echo "Finished. Note that two superious warnings might be shown: '... is this an incomplete installation?' and '... does not appear does not appear to be a valid DynamoRIO root."
+
+echo "The output files are located in the 'traces' directory."
+
+# We run run_portabilize_trace.sh in the traces directory. 
+cd traces
+
+# Remove a spurious empty directory in traces/ that messes up "run_portailize_trace.sh"
+# rm -r bin
+
+bash $SCARAB_ROOT/utils/memtrace/run_portabilize_trace.sh
+

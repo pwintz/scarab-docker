@@ -28,6 +28,14 @@ RUN apt-get install -y \
 	libconfig++-dev
 RUN cd scarab/src && make
 
+RUN apt-get install -y \
+	vim
+
+ARG USER_NAME=user
+RUN useradd -ms /bin/bash $USER_NAME 
+USER $USER_NAME
+WORKDIR /home/$USER_NAME
+
 # Add the DynamoRIO binaries directory to path.
 ENV PATH /scarab/src/build/opt/deps/dynamorio/bin64:$PATH
 # Add the directory containing the Scarab binary to the path.
@@ -37,5 +45,8 @@ ENV PATH /scarab/src/build/opt:$PATH
 # directories of DynamoRIO and Scarab. 
 ENV DYNAMORIO_ROOT /scarab/src/build/opt/deps/dynamorio
 ENV SCARAB_ROOT=/scarab
+ENV SCARAB_BUILD_DIR=/scarab/src/build/opt
+ENV TRACES_PATH /home/$USER_NAME/traces
 
-COPY example_trace_ls example_trace_ls
+# Copy files, giving ownership to the user (instead of root).
+COPY --chown=$USER_NAME:$USER_NAME example_trace_ls /home/$USER_NAME

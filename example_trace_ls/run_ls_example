@@ -1,0 +1,45 @@
+#!/bin/bash
+# We use exe() to echo commands as we execute them.
+exe() { echo "\$ $@" ; "$@" ; }
+
+echo Starting DynamaRIO
+exe drrun \
+        -root $DYNAMORIO_ROOT \
+        -t drcachesim \
+        -offline \
+        -outdir $TRACES_PATH \
+        -- \
+        ls
+
+echo Finished DynamaRIO. Two superious warnings might be shown:
+echo "  '... is this an incomplete installation?'"
+echo "  '... does not appear to be a valid DynamoRIO root.'"
+echo
+#echo "The output files are located $TRACES_PATH."
+#echo
+
+TRACE_DIR=$(ls $TRACES_PATH | grep drmemtrace | head -n 1)
+
+#echo "The trace is in $TRACE_DIR"
+
+# Run run_portabilize_trace.sh in $TRACES_DIR."
+cd $TRACES_PATH
+
+# Posprocess the traces.
+echo "Starting run_portabilize_trace.sh"
+exe bash $SCARAB_ROOT/utils/memtrace/run_portabilize_trace.sh
+echo "Finished run_portabilize_trace.sh"
+echo
+
+cd ~
+
+# Run Scarab
+echo Starting Scarab
+exe scarab  \
+        --frontend memtrace  \
+        --inst_limit 500000 \
+        --fetch_off_path_ops 0 \
+        --cbp_trace_r0=$TRACES_PATH \
+        --memtrace_modules_log=$TRACES_PATH/$TRACE_DIR/raw
+
+echo Finished Scarab

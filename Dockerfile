@@ -31,6 +31,11 @@ RUN cd scarab/src && make
 RUN apt-get install -y \
 	vim
 
+# Install C libraries
+RUN apt-get install -y \
+	libeigen3-dev \
+	libgsl-dev
+
 ARG USER_NAME=user
 RUN useradd -ms /bin/bash $USER_NAME 
 USER $USER_NAME
@@ -43,10 +48,11 @@ ENV PATH /scarab/src/build/opt:$PATH
 
 # Define environment variables that point to the root 
 # directories of DynamoRIO and Scarab. 
-ENV DYNAMORIO_ROOT /scarab/src/build/opt/deps/dynamorio
+ENV DYNAMORIO_ROOT=/scarab/src/build/opt/deps/dynamorio
 ENV SCARAB_ROOT=/scarab
 ENV SCARAB_BUILD_DIR=/scarab/src/build/opt
-ENV TRACES_PATH /home/$USER_NAME/traces
+ENV TRACES_PATH=/home/$USER_NAME/traces
 
 # Copy files, giving ownership to the user (instead of root).
-COPY --chown=$USER_NAME:$USER_NAME example_trace_ls /home/$USER_NAME
+COPY --chown=$USER_NAME:$USER_NAME docker_user_home /home/$USER_NAME
+

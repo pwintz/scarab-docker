@@ -5,4 +5,8 @@ if [ ! -f "$FILE" ]; then
     sudo service docker start
 fi
 
+cd docker_user_home 
+make clean
+cd -
+
 docker build -t scarab:latest .
